@@ -51,6 +51,7 @@
 .insightdetails{
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .insightdetails p{
@@ -59,10 +60,28 @@
 
 .checkboxContainer{
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkboxheadContainer{
+    display: flex;
     flex-direction: row;
     gap: 10px;
 }
 
-.checkboxContainer label{
+.checkboxheadContainer label{
     color:rgb(158,165,167)
+}
+
+.checkboxsubContainer{
+    padding:4px 24px;
+    display: grid;
+    /* flex-direction: row; */
+    grid-template-columns: auto;
+    gap: 10px;
+}
+
+.checkboxsubContainer label{
+    color:rgb(158,165,167)   
 }
