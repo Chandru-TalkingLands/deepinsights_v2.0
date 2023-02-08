@@ -10,7 +10,7 @@ export const Layers = ({ checkboxvalue, checkboxstatus }) => {
   async function getwfsLayerData(wmscheckedlayers) {
     if (wmscheckedlayers) {
       const wfslayerdata = await axios.get(
-        "http://43.205.20.114:8080/geoserver/exampleworkspace/ows",
+        "https://devapi.talkinglands.com/dev/geo/tljson",
         {
           params: {
             service: "WFS",
@@ -37,7 +37,7 @@ export const Layers = ({ checkboxvalue, checkboxstatus }) => {
       wmscheckedlayers = checkboxvalue.toString();
     getwfsLayerData(wmscheckedlayers);
     wmslayer = L.tileLayer
-      .wms("http://43.205.20.114:8080/geoserver/exampleworkspace/wms", {
+      .wms("https://devapi.talkinglands.com/dev/geo/tlmap", {
         layers: checkboxvalue,
         transparent: true,
         format: "image/png",
@@ -59,7 +59,7 @@ export const Layers = ({ checkboxvalue, checkboxstatus }) => {
     });
 
     wmslayer = L.tileLayer
-      .wms("http://43.205.20.114:8080/geoserver/exampleworkspace/wms", {
+      .wms("https://devapi.talkinglands.com/dev/geo/tlmap", {
         layers: wmscheckedlayers,
         transparent: true,
         format: "image/png",

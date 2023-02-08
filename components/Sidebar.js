@@ -6,8 +6,9 @@ import axios from "axios";
 
 export const Sidebar = (props) => {
   const [checkedwmslayers, setcheckedwmslayers] = useState([]);
+  const [deepinsightsdata,setdeepinsightsdata] = useState([])
   const [checkedstate, setcheckedstate] = useState(
-    new Array(dummylayers.length).fill(false)
+    new Array(7).fill(false)
   );
   const handleCheckbox = (e, position) => {
     let layername = e.target.name ;
@@ -30,7 +31,6 @@ export const Sidebar = (props) => {
       [...prev]
   ))
   };
-
   useEffect(() => {
     props.getCheckboxvalue(checkedwmslayers)
   }, [checkedwmslayers])
@@ -38,9 +38,11 @@ export const Sidebar = (props) => {
   useEffect(()=>{
     axios.get('https://devapi.talkinglands.com/dev/geo/contains?lng=77.53430960253098&lat=12.452717690170857&projectId=HC-DHN')
     .then((res)=>{
-      console.log(res)
+      // console.log(res)
+      console.log(res.data.data)
+      setdeepinsightsdata(res.data.data)
     })
-    .catch(()=>console.log(err))
+    .catch((err)=>console.log(err))
   },[])
   
   return (
@@ -62,16 +64,16 @@ export const Sidebar = (props) => {
             <label>Point of Intrest</label>
           </div> */}
           <div className={style.checkboxsubContainer}>
-            {dummylayers.map((lay, index) => {
+            {deepinsightsdata && deepinsightsdata.length > 0&& deepinsightsdata.map((lay, index) => {
               return (
                 <div className={style.checkboxheadContainer} key={index}>
                   <input
                     type="checkbox"
                     checked={checkedstate[index]}
-                    name={lay.value}
+                    name={lay.name}
                     onChange={(e) => handleCheckbox(e, index)}
                   />
-                  <label>{lay.name}</label>
+                  <label>{lay.subject[0]}</label>
                 </div>
               );
             })}
