@@ -4,7 +4,7 @@ import L from "leaflet";
 import { useMap } from "react-leaflet";
 import axios from "axios";
 
-export const Layers = ({ checkboxvalue, checkboxstatus }) => {
+export const Layers = ({ checkboxvalue, checkboxstatus,getmapZoom }) => {
   const map = useMap();
 
   async function getwfsLayerData(wmscheckedlayers) {
@@ -31,7 +31,6 @@ export const Layers = ({ checkboxvalue, checkboxstatus }) => {
   useEffect(() => {
     let wmslayer;
     let wmscheckedlayers;
-    console.log(checkboxvalue);
 
     if (checkboxvalue && checkboxvalue.length > 0)
       wmscheckedlayers = checkboxvalue.toString();
@@ -66,7 +65,13 @@ export const Layers = ({ checkboxvalue, checkboxstatus }) => {
         tiled: true,
       })
       .addTo(map);
+
   }, [checkboxvalue]);
 
+  useEffect(()=>{
+    map.on('zoom',()=>{
+      getmapZoom(map.getZoom())
+    })
+  },[])
   return <div></div>;
 };
