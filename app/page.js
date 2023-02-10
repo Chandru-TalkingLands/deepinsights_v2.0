@@ -25,33 +25,38 @@ export default function Home() {
     setstorezoomlevel(zoom)
   }
 
-  const [loadComponent, setloadComponent] = useState(
-    <Mapcontainer
-      checkboxvalue={checkboxvalue}
-      checkboxstatus={checkboxstatus}
-      getmapZoom={getmapZoom}
-    />
-  );
+  // const [loadComponent, setloadComponent] = useState(
+  //   <Mapcontainer
+  //     checkboxvalue={checkboxvalue}
+  //     checkboxstatus={checkboxstatus}
+  //     getmapZoom={getmapZoom}
+  //   />
+  // );
 
-  useEffect(() => {
-    if (storezoomlevel > 16) {
-      setloadComponent(<SingleLayout getmapZoom={getmapZoom} />);
-    }
-    return () => {
-      setloadComponent(
+  // useEffect(() => {
+  //   if (storezoomlevel > 16) {
+  //     setloadComponent(<SingleLayout getmapZoom={getmapZoom} />);
+  //   }
+  //   return () => {
+  //     setloadComponent(
+  //       <Mapcontainer
+  //         checkboxvalue={checkboxvalue}
+  //         checkboxstatus={checkboxstatus}
+  //         getmapZoom={getmapZoom}
+  //       />
+  //     );
+  //   };
+  // }, [storezoomlevel]);
+
+  return (
+    <main className={styles.main}>
+      <div className={style.insightscontainer}>
+        {/* {loadComponent} */}
         <Mapcontainer
           checkboxvalue={checkboxvalue}
           checkboxstatus={checkboxstatus}
           getmapZoom={getmapZoom}
         />
-      );
-    };
-  }, [storezoomlevel]);
-
-  return (
-    <main className={styles.main}>
-      <div className={style.insightscontainer}>
-        {loadComponent}
         <Sidebar
           getCheckboxvalue={getCheckboxvalue}
           getcheckboxStatus={getcheckboxStatus}
