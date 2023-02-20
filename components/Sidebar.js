@@ -8,9 +8,36 @@ export const Sidebar = (props) => {
   const [deepinsightsdata, setdeepinsightsdata] = useState([]);
   // const [checkedstate, setcheckedstate] = useState(new Array(4).fill(false));
   const [tempcheckvalue, settempcheckvalue] = useState(false);
+  let [selectedLayers, setSelectedLayers] = useState([]);
+  let [selectedMainLayers, setSelectedMainLayers] = useState([]);
+  
 
+  const mainCheckboxHandle = (e, selectedNestedLayers) => {
+    console.log("e.target ", e.target);
+    settempcheckvalue(e.target.checked);  
+    if(e.target.checked) {
+      setSelectedMainLayers((prev) => {
+        return [...prev, e.target.name];
+      });
+      setSelectedLayers((prev) => {
+        return [...prev, ...selectedNestedLayers];
+      }); 
+    } else {
+      setSelectedMainLayers(selectedMainLayers.filter(sml => sml != e.target.name ));
+      setSelectedLayers(selectedLayers.filter(sl => !selectedNestedLayers.includes(sl)));
+    }
+  }
   const handleCheckbox = (e, position) => {
-    settempcheckvalue(e.target.checked);
+    console.log(e.target)
+   // settempcheckvalue(e.target.checked);
+    if(e.target.checked) {
+      setSelectedLayers((prev) => {
+        return [...prev, e.target.name];
+      });   
+    } else {
+      selectedLayers = selectedLayers.filter(sl => sl !== e.target.name)
+      setSelectedLayers(selectedLayers);
+    }
     axios
       .post("http://localhost:4001/geo", { category: e.target.name })
       .then((res) => {
@@ -23,7 +50,7 @@ export const Sidebar = (props) => {
         if (e.target.checked && checkedwmslayers.includes(layername) == false) {
           setcheckedwmslayers((prev) => {
             return [...prev, layername];
-          });
+          });   
           return;
         }
         let layerindex = checkedwmslayers.indexOf(layername);
@@ -34,7 +61,7 @@ export const Sidebar = (props) => {
       })
       .catch((err) => console.log(err));
   };
-  console.log(checkedwmslayers);
+  // console.log(checkedwmslayers);
 
   useEffect(() => {
     props.getCheckboxvalue(checkedwmslayers);
@@ -44,9 +71,14 @@ export const Sidebar = (props) => {
     axios
       .get("http://localhost:4002/list?list=summary")
       .then((res) => {
-        setdeepinsightsdata(res.data.data);
-      })
-      .catch((err) => console.log(err));
+    setdeepinsightsdata(res.data.data);
+    // setdeepinsightsdata([
+    //     { "Legal Insights": ["Survey Maps"] },
+    //     { "Point of Interest": ["Hospitals", "Schools"] },
+    //     { "Land use": ["planningCadastre"] },
+    //   ]);
+    })
+    .catch((err) => console.log(err));
   }, []);
 
   return (
@@ -68,8 +100,9 @@ export const Sidebar = (props) => {
                     <div className={style.checkboxheadContainer}>
                       <input
                         type="checkbox"
-                        // checked={checkedstate[0]}
-                        // onChange={(e) => handleCheckbox(e, 0)}
+                        checked={selectedMainLayers.includes(layers[0])}
+                        name={layers[0]}
+                        onChange={(e) => mainCheckboxHandle(e, layers[1])}
                       />
                       <label>{layers[0]}</label>
                     </div>
@@ -79,24 +112,15 @@ export const Sidebar = (props) => {
                           <div
                             className={style.checkboxheadContainer}
                             key={index}
-                          >
+                          > 
                             <input
                               type="checkbox"
-                              checked={
-                                checkedwmslayers &&
-                                checkedwmslayers.length > 0 &&
-                                checkedwmslayers.map((z) => {
-                                  if (z == categorylayer) {
-                                    return true;
-                                  } else {
-                                    return false;
-                                  }
-                                })
-                              }
-                              // checked={tempcheckvalue}
+                              checked={selectedLayers.includes(categorylayer)}
+                              //checked={tempcheckvalue}
                               name={categorylayer}
                               onChange={(e) => handleCheckbox(e, index)}
                             />
+                            <>{checkedwmslayers.includes(categorylayer)}</>
                             <label>{categorylayer}</label>
                           </div>
                         </div>
