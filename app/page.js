@@ -11,8 +11,8 @@ export default function Home() {
   const [checkboxstatus, setcheckboxstatus] = useState();
   const [storezoomlevel,setstorezoomlevel] = useState()
 
-  const getCheckboxvalue = (value) => {
-    setcheckboxvalue(value);
+  const getCheckboxvalue = (value,bounds) => {
+    setcheckboxvalue({value,bounds});
   };
   const getcheckboxStatus = (value) => {
     setcheckboxstatus(value);

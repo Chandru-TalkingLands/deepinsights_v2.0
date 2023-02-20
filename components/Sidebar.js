@@ -10,6 +10,7 @@ export const Sidebar = (props) => {
   const [tempcheckvalue, settempcheckvalue] = useState(false);
   let [selectedLayers, setSelectedLayers] = useState([]);
   let [selectedMainLayers, setSelectedMainLayers] = useState([]);
+  const [layerBounds,setlayerBounds] = useState()
   
 
   const mainCheckboxHandle = (e, selectedNestedLayers) => {
@@ -41,6 +42,7 @@ export const Sidebar = (props) => {
     axios
       .post("http://localhost:4001/geo", { category: e.target.name })
       .then((res) => {
+        setlayerBounds({_southWest:res.data.data[0].LowerCorner,_northEast:res.data.data[0].UpperCorner})
         let layername = res.data.data[0].name;
         // const updatedcheckbox = checkedstate.map((item, index) =>
         //   index === position ? !item : item
@@ -64,7 +66,7 @@ export const Sidebar = (props) => {
   // console.log(checkedwmslayers);
 
   useEffect(() => {
-    props.getCheckboxvalue(checkedwmslayers);
+    props.getCheckboxvalue(checkedwmslayers,layerBounds);
   }, [checkedwmslayers]);
 
   useEffect(() => {

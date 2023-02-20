@@ -9,22 +9,23 @@ export const Layers = ({ checkboxvalue, checkboxstatus, getmapZoom }) => {
 console.log(checkboxvalue);
   async function getwfsLayerData(wmscheckedlayers) {
     if (wmscheckedlayers) {
-      const wfslayerdata = await axios.get(
-        "https://georchestra-127-0-1-1.traefik.me/geoserver/psc/ows",
-        {
-          params: {
-            service: "WFS",
-            version: "1.0.0",
-            request: "GetFeature",
-            typename: wmscheckedlayers,
-            outputFormat: "application/json",
-          },
-        }
-      );
-      const data = await wfslayerdata.data;
-      const geojson = L.geoJSON(data);
-      const bounds = geojson.getBounds();
-      map.fitBounds(bounds);
+      // const wfslayerdata = await axios.get(
+      //   "https://georchestra-127-0-1-1.traefik.me/geoserver/psc/ows",
+      //   {
+      //     params: {
+      //       service: "WFS",
+      //       version: "1.0.0",
+      //       request: "GetFeature",
+      //       typename: wmscheckedlayers,
+      //       outputFormat: "application/json",
+      //     },
+      //   }
+      // );
+      // const data = await wfslayerdata.data;
+      // const geojson = L.geoJSON(data);
+      // const bounds = geojson.getBounds();
+      console.log(checkboxvalue?.bounds)
+      map.fitBounds(checkboxvalue?.bounds);
     }
   }
 
@@ -32,12 +33,12 @@ console.log(checkboxvalue);
     let wmslayer;
     let wmscheckedlayers;
 
-    if (checkboxvalue && checkboxvalue.length > 0)
-      wmscheckedlayers = checkboxvalue.toString();
+    if (checkboxvalue?.value && checkboxvalue.value.length > 0)
+      wmscheckedlayers = checkboxvalue.value.toString();
     getwfsLayerData(wmscheckedlayers);
     wmslayer = L.tileLayer
       .wms("https://georchestra-127-0-1-1.traefik.me/geoserver/psc/wms", {
-        layers: checkboxvalue,
+        layers: checkboxvalue?.value,
         transparent: true,
         format: "image/png",
         tiled: true,
@@ -65,7 +66,7 @@ console.log(checkboxvalue);
         tiled: true,
       })
       .addTo(map);
-  }, [checkboxvalue]);
+  }, [checkboxvalue?.value]);
 
   useEffect(() => {
     map.on("zoom", () => {
