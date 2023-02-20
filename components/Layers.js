@@ -6,11 +6,11 @@ import axios from "axios";
 
 export const Layers = ({ checkboxvalue, checkboxstatus, getmapZoom }) => {
   const map = useMap();
-
+console.log(checkboxvalue);
   async function getwfsLayerData(wmscheckedlayers) {
     if (wmscheckedlayers) {
       const wfslayerdata = await axios.get(
-        "https://devapi.talkinglands.com/dev/geo/tljson",
+        "https://georchestra-127-0-1-1.traefik.me/geoserver/psc/ows",
         {
           params: {
             service: "WFS",
@@ -36,7 +36,7 @@ export const Layers = ({ checkboxvalue, checkboxstatus, getmapZoom }) => {
       wmscheckedlayers = checkboxvalue.toString();
     getwfsLayerData(wmscheckedlayers);
     wmslayer = L.tileLayer
-      .wms("https://devapi.talkinglands.com/dev/geo/tlmap", {
+      .wms("https://georchestra-127-0-1-1.traefik.me/geoserver/psc/wms", {
         layers: checkboxvalue,
         transparent: true,
         format: "image/png",
@@ -58,7 +58,7 @@ export const Layers = ({ checkboxvalue, checkboxstatus, getmapZoom }) => {
     });
 
     wmslayer = L.tileLayer
-      .wms("https://devapi.talkinglands.com/dev/geo/tlmap", {
+      .wms("https://georchestra-127-0-1-1.traefik.me/geoserver/psc/wms", {
         layers: wmscheckedlayers,
         transparent: true,
         format: "image/png",

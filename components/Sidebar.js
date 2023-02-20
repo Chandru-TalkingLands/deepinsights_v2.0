@@ -9,29 +9,31 @@ export const Sidebar = (props) => {
   const [checkedstate, setcheckedstate] = useState(new Array(4).fill(false));
 
   const handleCheckbox = (e, position) => {
-    let layername;
-    axios.get("http://localhost:4000")
+    axios
+      .post("http://localhost:4001/geo", { category: e.target.name })
       .then((res) => {
-        layername = res.data.data[0].name ;
+        let layername = res.data.data[0].name;
+   console.log(layername);
+        const updatedcheckbox = checkedstate.map((item, index) =>
+          index === position ? !item : item
+        );
+        setcheckedstate(updatedcheckbox);
+        props.getcheckboxStatus(e.target.checked);
+        if (e.target.checked && checkedwmslayers.includes(layername) == false) {
+          setcheckedwmslayers((prev) => {
+            return [...prev, layername];
+          });
+          return;
+        }
+        let layerindex = checkedwmslayers.indexOf(layername);
+        if (layerindex > -1) {
+          checkedwmslayers.splice(layerindex, 1);
+        }
+        setcheckedwmslayers((prev) => [...prev]);
       })
       .catch((err) => console.log(err));
-    const updatedcheckbox = checkedstate.map((item, index) =>
-      index === position ? !item : item
-    );
-    setcheckedstate(updatedcheckbox);
-    props.getcheckboxStatus(e.target.checked);
-    if (e.target.checked && checkedwmslayers.includes(layername) == false) {
-      setcheckedwmslayers((prev) => {
-        return [...prev, layername];
-      });
-      return;
-    }
-    let layerindex = checkedwmslayers.indexOf(layername);
-    if (layerindex > -1) {
-      checkedwmslayers.splice(layerindex, 1);
-    }
-    setcheckedwmslayers((prev) => [...prev]);
   };
+  console.log(checkedwmslayers);
 
   useEffect(() => {
     props.getCheckboxvalue(checkedwmslayers);
@@ -39,9 +41,7 @@ export const Sidebar = (props) => {
 
   useEffect(() => {
     axios
-      .get(
-        "http://localhost:4002/list?list=summary"
-      )
+      .get("http://localhost:4002/list?list=summary")
       .then((res) => {
         setdeepinsightsdata(res.data.data);
       })
@@ -61,8 +61,7 @@ export const Sidebar = (props) => {
           {deepinsightsdata &&
             deepinsightsdata.length > 0 &&
             deepinsightsdata.map((layobject) => {
-              return(
-              Object.entries(layobject).map(layers =>{
+              return Object.entries(layobject).map((layers) => {
                 return (
                   <>
                     <div className={style.checkboxheadContainer}>
@@ -93,7 +92,7 @@ export const Sidebar = (props) => {
                     })}
                   </>
                 );
-              }));
+              });
             })}
         </section>
       </div>
