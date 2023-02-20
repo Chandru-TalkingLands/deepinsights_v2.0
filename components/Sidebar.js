@@ -7,10 +7,10 @@ export const Sidebar = (props) => {
   const [checkedwmslayers, setcheckedwmslayers] = useState([]);
   const [deepinsightsdata, setdeepinsightsdata] = useState([]);
   // const [checkedstate, setcheckedstate] = useState(new Array(4).fill(false));
-  const [tempcheckvalue,settempcheckvalue] = useState(false)
+  const [tempcheckvalue, settempcheckvalue] = useState(false);
 
   const handleCheckbox = (e, position) => {
-    settempcheckvalue(e.target.checked)
+    settempcheckvalue(e.target.checked);
     axios
       .post("http://localhost:4001/geo", { category: e.target.name })
       .then((res) => {
@@ -82,8 +82,18 @@ export const Sidebar = (props) => {
                           >
                             <input
                               type="checkbox"
-                              // checked={checkedstate[index]}
-                              checked={tempcheckvalue}
+                              checked={
+                                checkedwmslayers &&
+                                checkedwmslayers.length > 0 &&
+                                checkedwmslayers.map((z) => {
+                                  if (z == categorylayer) {
+                                    return true;
+                                  } else {
+                                    return false;
+                                  }
+                                })
+                              }
+                              // checked={tempcheckvalue}
                               name={categorylayer}
                               onChange={(e) => handleCheckbox(e, index)}
                             />
