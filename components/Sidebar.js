@@ -6,18 +6,19 @@ import axios from "axios";
 export const Sidebar = (props) => {
   const [checkedwmslayers, setcheckedwmslayers] = useState([]);
   const [deepinsightsdata, setdeepinsightsdata] = useState([]);
-  const [checkedstate, setcheckedstate] = useState(new Array(4).fill(false));
+  // const [checkedstate, setcheckedstate] = useState(new Array(4).fill(false));
+  const [tempcheckvalue,settempcheckvalue] = useState(false)
 
   const handleCheckbox = (e, position) => {
+    settempcheckvalue(e.target.checked)
     axios
       .post("http://localhost:4001/geo", { category: e.target.name })
       .then((res) => {
         let layername = res.data.data[0].name;
-   console.log(layername);
-        const updatedcheckbox = checkedstate.map((item, index) =>
-          index === position ? !item : item
-        );
-        setcheckedstate(updatedcheckbox);
+        // const updatedcheckbox = checkedstate.map((item, index) =>
+        //   index === position ? !item : item
+        // );
+        // setcheckedstate(updatedcheckbox);
         props.getcheckboxStatus(e.target.checked);
         if (e.target.checked && checkedwmslayers.includes(layername) == false) {
           setcheckedwmslayers((prev) => {
@@ -81,7 +82,8 @@ export const Sidebar = (props) => {
                           >
                             <input
                               type="checkbox"
-                              checked={checkedstate[index]}
+                              // checked={checkedstate[index]}
+                              checked={tempcheckvalue}
                               name={categorylayer}
                               onChange={(e) => handleCheckbox(e, index)}
                             />
