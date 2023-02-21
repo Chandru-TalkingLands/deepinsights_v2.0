@@ -6,7 +6,7 @@ import axios from "axios";
 
 export const Layers = ({ checkboxvalue, checkboxstatus, getmapZoom }) => {
   const map = useMap();
-console.log(checkboxvalue);
+
   async function getwfsLayerData(wmscheckedlayers) {
     if (wmscheckedlayers) {
       // const wfslayerdata = await axios.get(
@@ -24,7 +24,6 @@ console.log(checkboxvalue);
       // const data = await wfslayerdata.data;
       // const geojson = L.geoJSON(data);
       // const bounds = geojson.getBounds();
-      console.log(checkboxvalue?.bounds)
       map.fitBounds(checkboxvalue?.bounds);
     }
   }
@@ -44,6 +43,7 @@ console.log(checkboxvalue);
         tiled: true,
       })
       .addTo(map);
+
     let mappedlayers = [];
     map.eachLayer((layer) => {
       if (layer.options.layers) {

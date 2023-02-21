@@ -6,45 +6,50 @@ import axios from "axios";
 export const Sidebar = (props) => {
   const [checkedwmslayers, setcheckedwmslayers] = useState([]);
   const [deepinsightsdata, setdeepinsightsdata] = useState([]);
-  const [layerBounds,setlayerBounds] = useState()
+  const [layerBounds, setlayerBounds] = useState();
   let [selectedLayers, setSelectedLayers] = useState([]);
   let [selectedMainLayers, setSelectedMainLayers] = useState([]);
-  
 
   const mainCheckboxHandle = (e, selectedNestedLayers) => {
-    if(e.target.checked) {
+    if (e.target.checked) {
       setSelectedMainLayers((prev) => {
         return [...prev, e.target.name];
       });
       setSelectedLayers((prev) => {
         return [...prev, ...selectedNestedLayers];
-      }); 
+      });
     } else {
-      setSelectedMainLayers(selectedMainLayers.filter(sml => sml != e.target.name ));
-      setSelectedLayers(selectedLayers.filter(sl => !selectedNestedLayers.includes(sl)));
+      setSelectedMainLayers(
+        selectedMainLayers.filter((sml) => sml != e.target.name)
+      );
+      setSelectedLayers(
+        selectedLayers.filter((sl) => !selectedNestedLayers.includes(sl))
+      );
     }
-  }
-
+  };
 
   const handleCheckbox = (e) => {
-    if(e.target.checked) {
+    if (e.target.checked) {
       setSelectedLayers((prev) => {
         return [...prev, e.target.name];
-      });   
+      });
     } else {
-      selectedLayers = selectedLayers.filter(sl => sl !== e.target.name)
+      selectedLayers = selectedLayers.filter((sl) => sl !== e.target.name);
       setSelectedLayers(selectedLayers);
     }
     axios
       .post("http://localhost:4001/geo", { category: e.target.name })
       .then((res) => {
-        setlayerBounds({_southWest:res.data.data[0].LowerCorner,_northEast:res.data.data[0].UpperCorner})
+        setlayerBounds({
+          _southWest: res.data.data[0].LowerCorner,
+          _northEast: res.data.data[0].UpperCorner,
+        });
         let layername = res.data.data[0].name;
         props.getcheckboxStatus(e.target.checked);
         if (e.target.checked && checkedwmslayers.includes(layername) == false) {
           setcheckedwmslayers((prev) => {
             return [...prev, layername];
-          });   
+          });
           return;
         }
         let layerindex = checkedwmslayers.indexOf(layername);
@@ -56,18 +61,17 @@ export const Sidebar = (props) => {
       .catch((err) => console.log(err));
   };
 
-
   useEffect(() => {
-    props.getCheckboxvalue(checkedwmslayers,layerBounds);
+    props.getCheckboxvalue(checkedwmslayers, layerBounds);
   }, [checkedwmslayers]);
 
   useEffect(() => {
     axios
       .get("http://localhost:4002/list?list=summary")
       .then((res) => {
-    setdeepinsightsdata(res.data.data);
-    })
-    .catch((err) => console.log(err));
+        setdeepinsightsdata(res.data.data);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (
@@ -101,7 +105,7 @@ export const Sidebar = (props) => {
                           <div
                             className={style.checkboxheadContainer}
                             key={index}
-                          > 
+                          >
                             <input
                               type="checkbox"
                               checked={selectedLayers.includes(categorylayer)}
