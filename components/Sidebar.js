@@ -6,16 +6,12 @@ import axios from "axios";
 export const Sidebar = (props) => {
   const [checkedwmslayers, setcheckedwmslayers] = useState([]);
   const [deepinsightsdata, setdeepinsightsdata] = useState([]);
-  // const [checkedstate, setcheckedstate] = useState(new Array(4).fill(false));
-  const [tempcheckvalue, settempcheckvalue] = useState(false);
+  const [layerBounds,setlayerBounds] = useState()
   let [selectedLayers, setSelectedLayers] = useState([]);
   let [selectedMainLayers, setSelectedMainLayers] = useState([]);
-  const [layerBounds,setlayerBounds] = useState()
   
 
   const mainCheckboxHandle = (e, selectedNestedLayers) => {
-    console.log("e.target ", e.target);
-    settempcheckvalue(e.target.checked);  
     if(e.target.checked) {
       setSelectedMainLayers((prev) => {
         return [...prev, e.target.name];
@@ -28,9 +24,9 @@ export const Sidebar = (props) => {
       setSelectedLayers(selectedLayers.filter(sl => !selectedNestedLayers.includes(sl)));
     }
   }
-  const handleCheckbox = (e, position) => {
-    console.log(e.target)
-   // settempcheckvalue(e.target.checked);
+
+
+  const handleCheckbox = (e) => {
     if(e.target.checked) {
       setSelectedLayers((prev) => {
         return [...prev, e.target.name];
@@ -44,10 +40,6 @@ export const Sidebar = (props) => {
       .then((res) => {
         setlayerBounds({_southWest:res.data.data[0].LowerCorner,_northEast:res.data.data[0].UpperCorner})
         let layername = res.data.data[0].name;
-        // const updatedcheckbox = checkedstate.map((item, index) =>
-        //   index === position ? !item : item
-        // );
-        // setcheckedstate(updatedcheckbox);
         props.getcheckboxStatus(e.target.checked);
         if (e.target.checked && checkedwmslayers.includes(layername) == false) {
           setcheckedwmslayers((prev) => {
@@ -63,7 +55,7 @@ export const Sidebar = (props) => {
       })
       .catch((err) => console.log(err));
   };
-  // console.log(checkedwmslayers);
+
 
   useEffect(() => {
     props.getCheckboxvalue(checkedwmslayers,layerBounds);
@@ -74,11 +66,6 @@ export const Sidebar = (props) => {
       .get("http://localhost:4002/list?list=summary")
       .then((res) => {
     setdeepinsightsdata(res.data.data);
-    // setdeepinsightsdata([
-    //     { "Legal Insights": ["Survey Maps"] },
-    //     { "Point of Interest": ["Hospitals", "Schools"] },
-    //     { "Land use": ["planningCadastre"] },
-    //   ]);
     })
     .catch((err) => console.log(err));
   }, []);
@@ -118,9 +105,8 @@ export const Sidebar = (props) => {
                             <input
                               type="checkbox"
                               checked={selectedLayers.includes(categorylayer)}
-                              //checked={tempcheckvalue}
                               name={categorylayer}
-                              onChange={(e) => handleCheckbox(e, index)}
+                              onChange={(e) => handleCheckbox(e)}
                             />
                             <>{checkedwmslayers.includes(categorylayer)}</>
                             <label>{categorylayer}</label>
